@@ -2,7 +2,7 @@ DOTFILES_DIR=~/src/dotfiles
 
 .PHONY : all up clean
 
-all: ~/.bashrc ~/.bash ~/.gitconfig ~/.synergy.conf ~/.screenrc ~/.vimrc
+all: ~/.bashrc ~/.bash ~/.gitconfig ~/.gitignore ~/.synergy.conf ~/.screenrc ~/.vimrc
 	@cd bash; $(MAKE)
 	@cd irssi; $(MAKE)
 	@cd vim; $(MAKE)
@@ -18,6 +18,8 @@ all: ~/.bashrc ~/.bash ~/.gitconfig ~/.synergy.conf ~/.screenrc ~/.vimrc
 	install -C -m 755 bashrc ~/.bashrc
 ~/.gitconfig: gitconfig
 	install -C -m 400 gitconfig ~/.gitconfig
+~/.gitignore: gitignore
+	install -C -m 400 gitignore ~/.gitignore
 ~/.synergy.conf: synergy.conf
 	install -C -m 400 synergy.conf ~/.synergy.conf
 ~/.screenrc: screenrc
