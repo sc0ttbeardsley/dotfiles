@@ -1,31 +1,26 @@
 #!/bin/bash
 # This script sets up your agent once you login
 
-_SSH_AGENT_BIN=/usr/bin/ssh-agent
-_SSH_ADD_BIN=/usr/bin/ssh-add
-_PS_BIN=/bin/ps
-_CAT_BIN=/bin/cat
-
-_AGENT_PID_FILE=${HOME}/.agent.pid
-_AGENT_SOCK_FILE=${HOME}/.agent.sock
+_SSH_AGENT_PID_FILE=${HOME}/.agent.pid
+_SSH_AGENT_SOCK_FILE=${HOME}/.agent.sock
 
 function _ssh_new_agent(){
 	# Otherwise set it up
 	echo Setting up new SSH Agent
-	eval `${_SSH_AGENT_BIN}`
-	echo ${SSH_AGENT_PID} > ${_AGENT_PID_FILE}
-	echo ${SSH_AUTH_SOCK} > ${_AGENT_SOCK_FILE}
-	${_SSH_ADD_BIN}
+	eval `ssh-agent`
+	echo ${SSH_AGENT_PID} > ${_SSH_AGENT_PID_FILE}
+	echo ${SSH_AUTH_SOCK} > ${_SSH_AGENT_SOCK_FILE}
+	ssh-add
 }
 
 function ssh_reconnect_agent(){
 	# ex
 	# SSH_AGENT_PID=19738
 	# SSH_AUTH_SOCK=/tmp/ssh-QPVgQ19737/agent.19737
-	if [ -f ${_AGENT_PID_FILE} -a -f ${_AGENT_SOCK_FILE} ]; then
-		PID=`${_CAT_BIN} ${_AGENT_PID_FILE}`
-		SOCK=`${_CAT_BIN} ${_AGENT_SOCK_FILE}`
-		${_PS_BIN} -fp ${PID} 2>/dev/null >/dev/null
+	if [ -f ${_SSH_AGENT_PID_FILE} -a -f ${_SSH_AGENT_SOCK_FILE} ]; then
+		PID=`cat ${_SSH_AGENT_PID_FILE}`
+		SOCK=`${_CAT_BIN} ${_SSH_AGENT_SOCK_FILE}`
+		ps -fp ${PID} 2>/dev/null >/dev/null
 		if [ $? -eq 0 ];then
 			export SSH_AGENT_PID=${PID}
 			export SSH_AUTH_SOCK=${SOCK}
