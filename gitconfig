@@ -1,4 +1,6 @@
 [user]
 	name = Scott Beardsley
 	email = sc0ttbeardsley@gmail.com
+[core]
+	excludesfile = ~/.gitignore
 
