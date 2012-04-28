@@ -15,19 +15,19 @@ all: ~/.bashrc ~/.bash ~/.gitconfig ~/.gitignore ~/.synergy.conf ~/.screenrc ~/.
 	@install -d -m 700 ~/.vim
 
 ~/.bashrc: bashrc
-	install -C -m 755 bashrc ~/.bashrc
+	install -m 755 bashrc ~/.bashrc
 ~/.gitconfig: gitconfig
-	install -C -m 400 gitconfig ~/.gitconfig
+	install -m 400 gitconfig ~/.gitconfig
 ~/.gitignore: gitignore
-	install -C -m 400 gitignore ~/.gitignore
+	install -m 400 gitignore ~/.gitignore
 ~/.synergy.conf: synergy.conf
-	install -C -m 400 synergy.conf ~/.synergy.conf
+	install -m 400 synergy.conf ~/.synergy.conf
 ~/.screenrc: screenrc
-	install -C -m 400 screenrc ~/.screenrc
+	install -m 400 screenrc ~/.screenrc
 ~/.vimrc: vimrc
-	install -C -m 400 vimrc ~/.vimrc
+	install -m 400 vimrc ~/.vimrc
 ~/.NERDTreeBookmarks: NERDTreeBookmarks
-	install -C -m 644 NERDTreeBookmarks ~/.NERDTreeBookmarks
+	install -m 644 NERDTreeBookmarks ~/.NERDTreeBookmarks
 
 up:
 	@install -d -m 700 ~/src

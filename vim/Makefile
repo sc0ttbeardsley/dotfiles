@@ -10,8 +10,8 @@ nt.zip:
 
 ~/.vim/nerdtree_plugin: nt.zip
 	@install -d -m 700 ~/.vim/nerdtree_plugin
-	install -C -m 400 nerdtree_plugin/fs_menu.vim ~/.vim/nerdtree_plugin/fs_menu.vim
-	install -C -m 400 nerdtree_plugin/exec_menuitem.vim ~/.vim/nerdtree_plugin/exec_menuitem.vim
+	install -m 400 nerdtree_plugin/fs_menu.vim ~/.vim/nerdtree_plugin/fs_menu.vim
+	install -m 400 nerdtree_plugin/exec_menuitem.vim ~/.vim/nerdtree_plugin/exec_menuitem.vim
 
 ~/.vim/plugin: plugin
 	@install -d -m 700 ~/.vim/plugin
