@@ -2,7 +2,7 @@ DOTFILES_DIR=~/src/dotfiles
 
 .PHONY : all up clean
 
-all: ~/.bashrc ~/.bash ~/.gitconfig ~/.gitignore ~/.synergy.conf ~/.screenrc ~/.vimrc
+all: ~/.bashrc ~/.bash ~/.gitconfig ~/.gitignore ~/.synergy.conf ~/.screenrc ~/.vimrc ~/.NERDTreeBookmarks
 	@cd bash; $(MAKE)
 	@cd irssi; $(MAKE)
 	@cd vim; $(MAKE)
@@ -26,6 +26,8 @@ all: ~/.bashrc ~/.bash ~/.gitconfig ~/.gitignore ~/.synergy.conf ~/.screenrc ~/.
 	install -C -m 400 screenrc ~/.screenrc
 ~/.vimrc: vimrc
 	install -C -m 400 vimrc ~/.vimrc
+~/.NERDTreeBookmarks: NERDTreeBookmarks
+	install -C -m 644 NERDTreeBookmarks ~/.NERDTreeBookmarks
 
 up:
 	@install -d -m 700 ~/src
