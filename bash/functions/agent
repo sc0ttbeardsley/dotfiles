@@ -19,7 +19,7 @@ function ssh_reconnect_agent(){
 	# SSH_AUTH_SOCK=/tmp/ssh-QPVgQ19737/agent.19737
 	if [ -f ${_SSH_AGENT_PID_FILE} -a -f ${_SSH_AGENT_SOCK_FILE} ]; then
 		PID=`cat ${_SSH_AGENT_PID_FILE}`
-		SOCK=`${_CAT_BIN} ${_SSH_AGENT_SOCK_FILE}`
+		SOCK=`cat ${_SSH_AGENT_SOCK_FILE}`
 		ps -fp ${PID} 2>/dev/null >/dev/null
 		if [ $? -eq 0 ];then
 			export SSH_AGENT_PID=${PID}
