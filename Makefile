@@ -7,6 +7,7 @@ all: downloads install
 downloads: .downloads/vim_nerdtree.zip vim/syntax/python.vim
 
 .downloads/vim_nerdtree.zip:
+	@mkdir -p .downloads
 	@curl 'http://www.vim.org/scripts/download_script.php?src_id=17123' -o .downloads/vim_nerdtree.zip 2>/dev/null
 	cd vim && unzip ../.downloads/vim_nerdtree.zip
 

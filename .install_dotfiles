@@ -1,5 +1,35 @@
 #!/bin/bash
 
+function _perms() {
+	a=$1
+	if [ ! -e $a ];then
+		# send back the value of umasked files
+		return `echo "obase=8;$(umask)"|bc`
+	fi
+	case $(uname) in
+		"Linux" )
+			echo $(stat -c "%a" $a);;
+		"Darwin" )
+			echo $(stat -f %p a|cut -c3-5);;
+	esac
+}
+
+function _filediff() {
+	a=$1
+	b=$2
+	if [ ! -f $a -o ! -f $b ];then
+		return 1
+	fi
+	case $(uname) in
+		"Linux" )
+			test "$(md5sum $a|cut -d\  -f1)" == "$(md5sum $b|cut -d\  -f1)"
+			return $?;;
+		"Darwin" )
+			test "$(md5 $a|cut -d\  -f4)" == "$(md5 $b|cut -d\  -f4)"
+			return $?;;
+	esac
+}
+
 function install_dotfiles() {
 	gitroot=$1
 	if [ ! -d "$gitroot" ]; then
@@ -10,15 +40,16 @@ function install_dotfiles() {
 	fi
 	paths=`find * -name .\* -prune -o -name Makefile -o -path .downloads* -o -name README -o -print`
 	for path in $paths; do
-		srcmode=$(stat -c "%a" $path)
+		srcmode=$(_perms $path)
 		installcmd=""
 		if [ -d $path ]; then
 			if [ ! -d $HOME/.$path ]; then
 				installcmd="/usr/bin/install -d -m $srcmode $HOME/.$path"
 			fi
 		elif [ -f $path ]; then
-			if [ ! -f $HOME/.$path -o "$(md5sum $path|cut -d\  -f1)" != "$(md5sum $HOME/.$path|cut -d\  -f1)" ];then
-				echo "path=$path src=$(md5sum $path|cut -d\  -f1) dest=$(md5sum $HOME/.$path|cut -d\  -f1)"
+			if [ ! -f $HOME/.$path ]; then
+				installcmd="/usr/bin/install -T -m $srcmode $gitroot/$path $HOME/.$path"
+			elif ! $(_filediff "$path" "$HOME/.$path") ; then
 				installcmd="/usr/bin/install -T -m $srcmode $gitroot/$path $HOME/.$path"
 			fi
 		fi
@@ -27,8 +58,8 @@ function install_dotfiles() {
 			$installcmd
 		fi
 		if [ -e $HOME/.$path ]; then
-			if [ "$(stat -c "%a" ~/.$path)" != "$srcmode" ];then
-				echo "[INFO] Changing mode for $path"
+			if [ "$(_perms ~/.$path)" != "$srcmode" ];then
+				echo "[INFO] Changing mode to $srcmode for $path"
 				chmod $srcmode $HOME/.$path
 			fi
 		else
