@@ -1,0 +1,41 @@
+#!/bin/bash
+
+function install_dotfiles() {
+	gitroot=$1
+	if [ ! -d "$gitroot" ]; then
+		echo "ERROR: no dotfiles in dir: $gitroot"
+		return -1
+	else
+		cd $gitroot
+	fi
+	paths=`find * -name .\* -prune -o -name Makefile -o -path .downloads* -o -name README -o -print`
+	for path in $paths; do
+		srcmode=$(stat -c "%a" $path)
+		installcmd=""
+		if [ -d $path ]; then
+			if [ ! -d $HOME/.$path ]; then
+				installcmd="/usr/bin/install -d -m $srcmode $HOME/.$path"
+			fi
+		elif [ -f $path ]; then
+			if [ ! -f $HOME/.$path -o "$(md5sum $path|cut -d\  -f1)" != "$(md5sum $HOME/.$path|cut -d\  -f1)" ];then
+				echo "path=$path src=$(md5sum $path|cut -d\  -f1) dest=$(md5sum $HOME/.$path|cut -d\  -f1)"
+				installcmd="/usr/bin/install -T -m $srcmode $gitroot/$path $HOME/.$path"
+			fi
+		fi
+		if [ "$installcmd" ]; then
+			echo "[INFO] $installcmd"
+			$installcmd
+		fi
+		if [ -e $HOME/.$path ]; then
+			if [ "$(stat -c "%a" ~/.$path)" != "$srcmode" ];then
+				echo "[INFO] Changing mode for $path"
+				chmod $srcmode $HOME/.$path
+			fi
+		else
+			echo "Hmmm something went wrong while installing $path to $HOME/.$path"
+		fi
+	done
+}
+
+install_dotfiles $1
+

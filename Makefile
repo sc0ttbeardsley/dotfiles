@@ -1,38 +1,22 @@
 DOTFILES_DIR=~/src/dotfiles
 
-.PHONY : all up clean
+.PHONY : all downloads install
 
-all: ~/.bashrc ~/.bash ~/.gitconfig ~/.gitignore ~/.synergy.conf ~/.screenrc ~/.vimrc
-	@cd bash; $(MAKE)
-	@cd irssi; $(MAKE)
-	@cd vim; $(MAKE)
+all: downloads install
 
-~/.bash: bash
-	@install -d -m 700 ~/.bash
-~/.irssi: irssi
-	@install -d -m 700 ~/.irssi
-~/.vim: vim
-	@install -d -m 700 ~/.vim
+downloads: .downloads/vim_nerdtree.zip vim/syntax/python.vim
 
-~/.bashrc: bashrc
-	install -m 755 bashrc ~/.bashrc
-~/.gitconfig: gitconfig
-	install -m 400 gitconfig ~/.gitconfig
-~/.gitignore: gitignore
-	install -m 400 gitignore ~/.gitignore
-~/.synergy.conf: synergy.conf
-	install -m 400 synergy.conf ~/.synergy.conf
-~/.screenrc: screenrc
-	install -m 400 screenrc ~/.screenrc
-~/.vimrc: vimrc
-	install -m 400 vimrc ~/.vimrc
+.downloads/vim_nerdtree.zip:
+	@curl 'http://www.vim.org/scripts/download_script.php?src_id=17123' -o .downloads/vim_nerdtree.zip 2>/dev/null
+	cd vim && unzip ../.downloads/vim_nerdtree.zip
 
-up:
-	@install -d -m 700 ~/src
-	@mkdir ~/src
-	@cd ~/src && git pull git@github.com:sc0ttbeardsley/dotfiles.git
+vim/syntax/python.vim:
+	@curl 'https://github.com/hdima/vim-scripts/blob/master/syntax/python/python.vim' -o vim/syntax/python.vim 2>/dev/null
+
+install: downloads .install_dotfiles
+	@./.install_dotfiles $(DOTFILES_DIR)
 
 clean:
-	echo "cleaning dotfiles"
-	cd bash; $(MAKE) clean
+	@rm -rf .downloads/vim_nerdtree.zip vim/nerdtree_plugin vim/doc/NERD_tree.txt vim/plugin/NERD_tree.vim vim/syntax/nerdtree.vim
+	@rm -rf vim/syntax/python.vim
 
