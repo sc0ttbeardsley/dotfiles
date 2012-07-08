@@ -10,7 +10,7 @@ function _perms() {
 		"Linux" )
 			echo $(stat -c "%a" $a);;
 		"Darwin" )
-			echo $(stat -f %p a|cut -c3-5);;
+			echo $(stat -f %p $a|cut -c4-6);;
 	esac
 }
 
@@ -54,11 +54,14 @@ function install_dotfiles() {
 			fi
 		fi
 		if [ "$installcmd" ]; then
+			if [ $(uname) == "Darwin" ]; then
+				installcmd=$(echo $installcmd|sed -e 's/ -T//')
+			fi
 			echo "[INFO] $installcmd"
 			$installcmd
 		fi
 		if [ -e $HOME/.$path ]; then
-			if [ "$(_perms ~/.$path)" != "$srcmode" ];then
+			if [ "$(_perms ~/.$path)" != "$srcmode" ]; then
 				echo "[INFO] Changing mode to $srcmode for $path"
 				chmod $srcmode $HOME/.$path
 			fi
