@@ -2,7 +2,7 @@
 all: ~/.irssi/config
 
 ~/.irssi/config: config
-	@install -d -m 700 ~/.irssi/config
+	@install -m 700 config ~/.irssi/config
 
 clean:
 	@echo "cleaning irssi"
